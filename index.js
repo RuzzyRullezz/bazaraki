@@ -21,11 +21,13 @@ argParser
     .option('-t, --token <n>', 'Telegram token')
     .option('-c, --chat <n>', 'Telegram chat', parseInt)
     .option('-e, --exc <n>', 'Telegram error chat', parseInt)
+    .option('-s, --silence', 'Silence mode')
     .parse(process.argv);
 
 const tgBotToken = argParser.token;
 const tgChat = argParser.chat;
 const exceptionChat = argParser.exc;
+const silenceMode = argParser.silence;
 const tgBot = new TelegramBot(tgBotToken);
 
 
@@ -78,7 +80,9 @@ async function getAdLinks() {
         db.findOne({link: link}, async (err, record) => {
             if (record == null) {
                 // Send in Tg;
-                await tgBot.sendMessage(tgChat, link);
+                if (!silenceMode) {
+                    await tgBot.sendMessage(tgChat, link);
+                }
                 // Save in neDB;
                 db.insert({link: link, added: (new Date()).getTime()})
             }
