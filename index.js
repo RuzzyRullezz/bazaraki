@@ -80,7 +80,7 @@ async function getAdLinks() {
         db.findOne({link: link}, async (err, record) => {
             if (record == null) {
                 // Send in Tg;
-                if (!silenceMode) {
+                if (silenceMode === undefined) {
                     await tgBot.sendMessage(tgChat, link);
                 }
                 // Save in neDB;
