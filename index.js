@@ -66,6 +66,7 @@ async function getAdLinks() {
             }, nextBtnSelector);
         } while (url != null);
         await browser.close();
+        links = Array.from(new Set(links));
         return links;
     } catch (error) {
         await tgBot.sendMessage(exceptionChat, error.toString());
@@ -80,7 +81,7 @@ async function getAdLinks() {
         db.findOne({link: link}, async (err, record) => {
             if (record == null) {
                 // Send in Tg;
-                console.log(`Adding: ${link}`)
+                console.log(`Adding: ${link}`);
                 if (silenceMode === undefined) {
                     await tgBot.sendMessage(tgChat, link);
                 }
